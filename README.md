@@ -5,23 +5,23 @@ For this project, I was tasked to create a reporting tool that prints out report
 
 ## The report should answer the following questions:
 
-What are the most popular three articles of all time?
-Who are the most popular article authors of all time?
-On which days did more than 1% of requests lead to errors?
+- What are the most popular three articles of all time?
+- Who are the most popular article authors of all time?
+- On which days did more than 1% of requests lead to errors?
 
-Set up the environment
-Install Python3
-Install VirtualBox
-Install Vagrant
-Fort or clone this repository
-Place the report.py of this repo under the /vagrant directory
-Download the database script, unzip and place it under the /vagrant directory
-Navigate to the /vagrant directory and run vagrant up to start the virtual machine
-Run vagrant ssh to log in the virtual machine
-Create the database and views
-Run psql -d news -f newsdata.sql on the virtual machine /vagrant folder to create the database
-Run the following code to create the necessary views:
-
+- Set up the environment
+- Install Python3
+- Install VirtualBox
+- Install Vagrant
+- Fort or clone this repository
+- Place the report.py of this repo under the /vagrant directory
+- Download the database script, unzip and place it under the /vagrant directory
+- Navigate to the /vagrant directory and run vagrant up to start the virtual machine
+- Run vagrant ssh to log in the virtual machine
+- Create the database and views
+- Run psql -d news -f newsdata.sql on the virtual machine /vagrant folder to create the database
+### Run the following code to create the necessary views:
+```
 CREATE VIEW most_popular_articles as
 SELECT articles.title, count(log.path) as views
     FROM articles, log
@@ -37,25 +37,27 @@ SELECT authors.name, count(log.path) as author_views
     AND log.path LIKE '%' || articles.slug || '%'
     GROUP BY authors.name
     ORDER BY author_views desc;
-
+    
 CREATE VIEW mistake_each_day as
 SELECT to_char(log.time, 'FMMonth DD, YYYY') "day", count(log.status) as errors
     FROM log
     WHERE status = '404 NOT FOUND'
     GROUP BY 1
     ORDER BY 1;
-        
+```    
+```        
 CREATE VIEW requests_per_day as
 SELECT to_char(log.time, 'FMMonth DD, YYYY') "day", count(log.status) as requests
     FROM log
     GROUP BY 1
     ORDER BY 1;
+   
         
 CREATE VIEW errors_day as
 SELECT mistake_each_day.day, concat(ROUND((100.0 * mistake_each_day.errors / requests_per_day.requests), 2), '%')as percent_errors
     FROM mistake_each_day, requests_per_day
     WHERE mistake_each_day.day = requests_per_day.day
     AND ((100.0 * mistake_each_day.errors / requests_per_day.requests) > 1)                                         ORDER BY percent_errors desc;
-        
-Within the VM, navigate to cd /vagrant
-Execute the file python Article.py
+```        
+- Within the VM, navigate to cd /vagrant
+- Execute the file python Article.py
