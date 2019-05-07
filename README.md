@@ -1,25 +1,26 @@
 # Logs-Analysis
 
 ## Project Overview
-For this project, I was tasked to create a reporting tool that prints out reports in (plain text) based on the data in a database. This reporting tool is a Python program using the psycopg2 module to connect to the database.
+For this project, I was tasked to create a reporting tool that prints out reports in (plain text) based on the data in a database. This reporting tool is a Python program using the **psycopg2** module to connect to the database.
 
 ## The report should answer the following questions:
-
 - What are the most popular three articles of all time?
 - Who are the most popular article authors of all time?
 - On which days did more than 1% of requests lead to errors?
 
-- Set up the environment
-- Install Python3
-- Install VirtualBox
-- Install Vagrant
-- Fort or clone this repository
-- Place the report.py of this repo under the /vagrant directory
+## Set up the environment
+- Install **Python3**
+- Install **VirtualBox**
+- Install **Vagrant**
+- Fork or clone https://github.com/udacity/fullstack-nanodegree-vm repository
+- Place the Article.py of this repo under the /vagrant directory
 - Download the database script, unzip and place it under the /vagrant directory
-- Navigate to the /vagrant directory and run vagrant up to start the virtual machine
-- Run vagrant ssh to log in the virtual machine
+- Navigate to the /vagrant directory and run `vagrant up` to start the virtual machine
+- Run `vagrant ssh` to log in the virtual machine
+- Run `psql -d news -f newsdata.sql`
+- To connect database run `psql -d news`
 - Create the database and views
-- Run psql -d news -f newsdata.sql on the virtual machine /vagrant folder to create the database
+
 ### Run the following code to create the necessary views:
 ```
 CREATE VIEW most_popular_articles as
@@ -59,5 +60,5 @@ SELECT mistake_each_day.day, concat(ROUND((100.0 * mistake_each_day.errors / req
     WHERE mistake_each_day.day = requests_per_day.day
     AND ((100.0 * mistake_each_day.errors / requests_per_day.requests) > 1)                                         ORDER BY percent_errors desc;
 ```        
-- Within the VM, navigate to cd /vagrant
-- Execute the file python Article.py
+- Within the VM, navigate to **cd /vagrant**
+- Execute the file `python Article.py`
